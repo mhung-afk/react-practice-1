@@ -6,25 +6,24 @@ export default function Searchbar() {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [editable, setEditable] = useState(false);
-    const [showTable, setShowTable] = useState(false); // Khởi tạo showTable là false
 
     useEffect(() => {
-        setUsers(data);
-    }, []);
 
-    useEffect(() => {
-        if (search.trim() === '') {
-            setShowTable(false); // Không hiển thị bảng nếu không có kết quả tìm kiếm
-            return;
+        const s = search.trim()
+        
+        if (s === '') {
+            setUsers([]) 
+            return 
         }
-
-        const filteredUsers = users.filter(user =>
-            user.username.toLowerCase().includes(search.toLowerCase()) ||
-            user.email.toLowerCase().includes(search.toLowerCase())
+        
+        const filteredUsers = data.filter(user =>
+            user.username.toLowerCase().includes(s.toLowerCase()) ||
+            user.email.toLowerCase().includes(s.toLowerCase())
         );
 
-        setShowTable(filteredUsers.length > 0); // Hiển thị bảng nếu có kết quả tìm kiếm
-    }, [search, users]);
+        setUsers(filteredUsers)
+
+    }, [search]);
 
     function handlePressEnter(e) {
         if (e.keyCode === 13) {
@@ -49,7 +48,7 @@ export default function Searchbar() {
                 />
             </div>
             <div className='mt-20 bg-slate-200 rounded-2xl'>
-                {showTable && (
+                {users.length > 0 && (
                     <table className='table-auto'>
                         <thead>
                             <tr>
@@ -68,17 +67,12 @@ export default function Searchbar() {
                         </thead>
                         <tbody>
                             {users
-                                .filter(item =>
-                                    item.username.toLowerCase().includes(search.toLowerCase()) ||
-                                    item.email.toLowerCase().includes(search.toLowerCase())
-                                )
                                 .map((item, index) => (
                                     <tr key={index} className='text-center'>
                                         <td className='pt-5 px-10'>
                                             {editable ? (
                                                 <input
                                                     className='text-center'
-                                                    onBlur={() => setEditable(false)}
                                                     onKeyUp={(e) => handlePressEnter(e)}
                                                     type="text"
                                                     value={item.username}
@@ -96,7 +90,6 @@ export default function Searchbar() {
                                             {editable ? (
                                                 <input
                                                     className='text-center'
-                                                    onBlur={() => setEditable(false)}
                                                     onKeyUp={(e) => handlePressEnter(e)}
                                                     type="text"
                                                     value={item.email}
@@ -113,7 +106,6 @@ export default function Searchbar() {
                                             {editable ? (
                                                 <input
                                                     className='text-center'
-                                                    onBlur={() => setEditable(false)}
                                                     onKeyUp={(e) => handlePressEnter(e)}
                                                     type="text"
                                                     value={item.birthday}
