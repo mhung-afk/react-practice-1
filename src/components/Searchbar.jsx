@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import data from '../MOCK_DATA.json';
-import { Button } from '@mui/material';
 
 export default function Searchbar() {
     const [users, setUsers] = useState([]);
@@ -29,9 +28,9 @@ export default function Searchbar() {
 
     function handlePressEnter(e) {
         if (e.keyCode === 13) {
-          setEditable(false)
+            setEditable(false)
         }
-      }
+    }
 
     function handleEditAll() {
         setEditable(true); // Bật chế độ chỉnh sửa cho tất cả user
@@ -39,7 +38,7 @@ export default function Searchbar() {
 
     return (
         <div className="flex flex-col items-center">
-           <div className='text-5xl font-sans'>Search</div>
+            <div className='text-5xl font-sans'>Search</div>
             <div className="border-2 border-black rounded-lg w-96 absolute left-1/2 -translate-x-1/2 mt-16">
                 <SearchIcon className='text-blue-600' />
                 <input
@@ -49,7 +48,7 @@ export default function Searchbar() {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
-            <div className='mt-20'>
+            <div className='mt-20 bg-slate-200 rounded-2xl'>
                 {showTable && (
                     <table className='table-auto'>
                         <thead>
@@ -58,8 +57,8 @@ export default function Searchbar() {
                                 <th className='pt-5 px-10'>Email</th>
                                 <th className='pt-5 px-10'>Birthday</th>
                                 <th className='pt-5 px-10'>
-                                    <button 
-                                        className='bg-slate-500 rounded-xl text-slate-50 w-24' 
+                                    <button
+                                        className='bg-slate-500 rounded-xl text-slate-50 w-24'
                                         onClick={handleEditAll} // Khi bấm nút này, bật chế độ chỉnh sửa
                                     >
                                         Edit All
@@ -75,10 +74,10 @@ export default function Searchbar() {
                                 )
                                 .map((item, index) => (
                                     <tr key={index} className='text-center'>
-                                        
                                         <td className='pt-5 px-10'>
                                             {editable ? (
-                                                <input 
+                                                <input
+                                                    className='text-center'
                                                     onBlur={() => setEditable(false)}
                                                     onKeyUp={(e) => handlePressEnter(e)}
                                                     type="text"
@@ -93,8 +92,40 @@ export default function Searchbar() {
                                                 item.username
                                             )}
                                         </td>
-                                        <td className='pt-5 px-10'>{item.email}</td>
-                                        <td className='pt-5 px-10'>{item.birthday}</td>       
+                                        <td className='pt-5 px-10'>
+                                            {editable ? (
+                                                <input
+                                                    className='text-center'
+                                                    onBlur={() => setEditable(false)}
+                                                    onKeyUp={(e) => handlePressEnter(e)}
+                                                    type="text"
+                                                    value={item.email}
+                                                    onChange={(e) => {
+                                                        const updatedUsers = [...users];
+                                                        updatedUsers[index].email = e.target.value;
+                                                        setUsers(updatedUsers);
+                                                    }}
+                                                />
+                                            ) : (
+                                                item.email
+                                            )}</td>
+                                        <td className='pt-5 px-10'>
+                                            {editable ? (
+                                                <input
+                                                    className='text-center'
+                                                    onBlur={() => setEditable(false)}
+                                                    onKeyUp={(e) => handlePressEnter(e)}
+                                                    type="text"
+                                                    value={item.birthday}
+                                                    onChange={(e) => {
+                                                        const updatedUsers = [...users];
+                                                        updatedUsers[index].birthday = e.target.value;
+                                                        setUsers(updatedUsers);
+                                                    }}
+                                                />
+                                            ) : (
+                                                item.birthday
+                                            )}</td>
                                     </tr>
                                 ))}
                         </tbody>
