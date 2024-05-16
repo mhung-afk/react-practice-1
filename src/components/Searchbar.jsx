@@ -7,15 +7,17 @@ export default function Searchbar() {
     const [search, setSearch] = useState('');
     const [editable, setEditable] = useState(false);
 
+
+
     useEffect(() => {
 
         const s = search.trim()
-        
+
         if (s === '') {
-            setUsers([]) 
-            return 
+            setUsers([])
+            return
         }
-        
+
         const filteredUsers = data.filter(user =>
             user.username.toLowerCase().includes(s.toLowerCase()) ||
             user.email.toLowerCase().includes(s.toLowerCase())
@@ -31,9 +33,64 @@ export default function Searchbar() {
         }
     }
 
-    function handleEditAll() {
-        setEditable(true); // Bật chế độ chỉnh sửa cho tất cả user
+    function isValidate() {
+        const checkDuplicate = users.filter(myFunction)
+
+        function myFunction(value, index, array) {
+            if (index !== array.map(e => e.username).indexOf(value.username)) {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+
+        if (checkDuplicate.length === 0) {
+            setEditable(false)
+        } else {
+            alert("There is some username exist. Try again !")
+            setEditable(true)
+        }
+
+        for (let n = 0; n < users.length; n++) {
+
+            const emptyStringRegex = /^$/;
+
+            if (emptyStringRegex.test(users[n].username)) {
+                alert("Invalid username !");
+                setEditable(true)
+                break;
+            } else {
+                setEditable(false)
+            }
+
+            const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+ 
+            if (!emailRegex.test(users[n].email)) {
+                alert("Invalid email !");
+                setEditable(true)
+                break;
+            } else {
+                setEditable(false)
+            }
+
+            const birthdayRegex = /^(?:0[1-9]|[12]\d|3[01])([\/.-])(?:0[1-9]|1[012])\1(?:19|20)\d\d$/g
+
+            if (!birthdayRegex.test(users[n].birthday)) {
+                alert("Invalid birthday !");
+                setEditable(true)
+                break;
+            } else {
+                setEditable(false)
+            }
+
+        }
+
+        for (let n = 0; n < users.length; n++) {}
+
+        
     }
+
 
     return (
         <div className="flex flex-col items-center">
@@ -56,12 +113,17 @@ export default function Searchbar() {
                                 <th className='pt-5 px-10'>Email</th>
                                 <th className='pt-5 px-10'>Birthday</th>
                                 <th className='pt-5 px-10'>
-                                    <button
-                                        className='bg-slate-500 rounded-xl text-slate-50 w-24'
-                                        onClick={handleEditAll} // Khi bấm nút này, bật chế độ chỉnh sửa
-                                    >
-                                        Edit All
-                                    </button>
+                                    {editable
+                                        ? (
+                                            <button className='bg-slate-500 rounded-xl text-slate-50 w-24' onClick={isValidate}>Save</button>
+                                        )
+                                        : <button
+                                            className='bg-slate-500 rounded-xl text-slate-50 w-24'
+                                            onClick={() => setEditable(true)} // Khi bấm nút này, bật chế độ chỉnh sửa
+
+                                        >
+                                            Edit All
+                                        </button>}
                                 </th>
                             </tr>
                         </thead>
@@ -117,7 +179,10 @@ export default function Searchbar() {
                                                 />
                                             ) : (
                                                 item.birthday
-                                            )}</td>
+                                            )}
+                                        </td>
+
+
                                     </tr>
                                 ))}
                         </tbody>
